@@ -2,7 +2,7 @@ package com.dogboard.springboot.service.posts;
 
 
 import com.dogboard.springboot.domain.posts.Posts;
-import com.dogboard.springboot.domain.posts.PostsRespository;
+import com.dogboard.springboot.domain.posts.PostsRepository;
 import com.dogboard.springboot.web.dto.PostsResponseDto;
 import com.dogboard.springboot.web.dto.PostsSaveRequestDto;
 import com.dogboard.springboot.web.dto.PostsUpdateRequestDto;
@@ -16,33 +16,31 @@ import javax.transaction.Transactional;
 
 public class PostsService {
 
-    private final PostsRespository postsRespository;
+    private final PostsRepository postsRepository;
 
     @Transactional
     public Long save(PostsSaveRequestDto requestDto)
     {
-        return postsRespository.save(requestDto.toEntity()).getId();
+        return postsRepository.save(requestDto.toEntity()).getId();
     }
+
 
     @Transactional
-    public Long update(Long id, PostsUpdateRequestDto requestDto)
-    {
-        Posts posts = postsRespository.findById(id).orElseThrow(()
-                -> new IllegalArgumentException("해당 게시글이 없습니다. id ="+id));
+    public Long update(Long id,PostsUpdateRequestDto requestDto) {
+        Posts posts = postsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
 
-            posts.update(requestDto.getTitle(),requestDto.getContent());
+       posts.update(requestDto.getTitle(),requestDto.getContent());
 
-            return id;
+        return id;
     }
 
 
-    public PostsResponseDto findById(Long id)
-    {
-        Posts entity =postsRespository.findById(id)
-                .orElseThrow(()-> new IllegalArgumentException("해당 게시글이 없습니다. id = "+id));
+
+    public PostsResponseDto findById(Long id) {
+        Posts entity = postsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + id));
 
         return new PostsResponseDto(entity);
-
-
     }
 }
